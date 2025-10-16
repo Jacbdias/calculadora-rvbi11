@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <circle cx="256" cy="256" r="246" fill="#000000" stroke="#3dff00" stroke-width="20"/>
+  <g fill="#ffffff">
+    <rect x="140" y="240" width="48" height="92" rx="8"/>
+    <rect x="204" y="204" width="48" height="128" rx="8"/>
+    <rect x="268" y="164" width="48" height="168" rx="8"/>
+    <rect x="332" y="124" width="48" height="208" rx="8"/>
+    <path d="M332 124l-16 16 34 34-62 62 22 22 62-62 34 34 16-16-56-56a12 12 0 0 0-17 0z"/>
+  </g>
+  <g fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="middle">
+    <text x="256" y="360" font-size="60">FATOS</text>
+    <text x="256" y="420" font-size="60">DA BOLSA</text>
+  </g>
+</svg>
