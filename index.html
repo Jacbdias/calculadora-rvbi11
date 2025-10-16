@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Preço Médio Ajustado - RVBI11</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .option-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option-btn {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .option-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .option-btn.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .input-section {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .input-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result-section {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f5f7ff, #fef5ff);
+            border-radius: 15px;
+            border: 2px solid #e8eaff;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .result-section.active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            color: #667eea;
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .result-value {
+            font-size: 32px;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .result-details {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .info-box p {
+            color: #555;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .reset-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💰 Calculadora RVBI11</h1>
+        <p class="subtitle">Preço Médio Ajustado após Incorporação</p>
+
+        <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); padding: 15px; border-radius: 10px; margin-bottom: 20px; color: white; text-align: center; font-weight: 600; box-shadow: 0 5px 15px rgba(238, 90, 36, 0.3);">
+            ⚠️ ATENÇÃO IMPORTANTE ⚠️<br>
+            Se você possui AMBOS os fundos (HGFF11 e BPFF11), você DEVE selecionar a opção "Ambos Fundos" e calcular tudo junto.<br>
+            <span style="font-size: 14px;">Não faça cálculos separados - isso resultará em um preço médio incorreto!</span>
+        </div>
+
+        <div class="option-selector">
+            <button class="option-btn" onclick="selectOption('HGFF11')">HGFF11</button>
+            <button class="option-btn" onclick="selectOption('BPFF11')">BPFF11</button>
+            <button class="option-btn" onclick="selectOption('AMBOS')">Ambos Fundos</button>
+        </div>
+
+        <div id="hgff-section" class="input-section">
+            <div class="input-group">
+                <label for="hgff-qtd">Quantidade de cotas HGFF11:</label>
+                <input type="number" id="hgff-qtd" placeholder="Ex: 100" step="any">
+            </div>
+            <div class="input-group">
+                <label for="hgff-preco">Preço médio HGFF11 (R$):</label>
+                <input type="number" id="hgff-preco" placeholder="Ex: 85.50" step="0.01">
+            </div>
+        </div>
+
+        <div id="bpff-section" class="input-section">
+            <div class="input-group">
+                <label for="bpff-qtd">Quantidade de cotas BPFF11:</label>
+                <input type="number" id="bpff-qtd" placeholder="Ex: 100" step="any">
+            </div>
+            <div class="input-group">
+                <label for="bpff-preco">Preço médio BPFF11 (R$):</label>
+                <input type="number" id="bpff-preco" placeholder="Ex: 72.30" step="0.01">
+            </div>
+        </div>
+
+        <div id="ambos-section" class="input-section">
+            <div class="input-group">
+                <label for="ambos-hgff-qtd">Quantidade de cotas HGFF11:</label>
+                <input type="number" id="ambos-hgff-qtd" placeholder="Ex: 100" step="any">
+            </div>
+            <div class="input-group">
+                <label for="ambos-hgff-preco">Preço médio HGFF11 (R$):</label>
+                <input type="number" id="ambos-hgff-preco" placeholder="Ex: 85.50" step="0.01">
+            </div>
+            <div class="input-group">
+                <label for="ambos-bpff-qtd">Quantidade de cotas BPFF11:</label>
+                <input type="number" id="ambos-bpff-qtd" placeholder="Ex: 100" step="any">
+            </div>
+            <div class="input-group">
+                <label for="ambos-bpff-preco">Preço médio BPFF11 (R$):</label>
+                <input type="number" id="ambos-bpff-preco" placeholder="Ex: 72.30" step="0.01">
+            </div>
+        </div>
+
+        <button id="calculate-btn" class="calculate-btn" style="display: none;" onclick="calcular()">
+            Calcular Preço Médio Ajustado
+        </button>
+
+        <div id="result-section" class="result-section">
+            <div class="result-title">📊 Resultado do Cálculo</div>
+            <div class="result-value" id="resultado-preco">R$ 0,00</div>
+            
+            <div class="result-details">
+                <div class="detail-row">
+                    <span class="detail-label">Total de cotas RVBI11 recebidas:</span>
+                    <span class="detail-value" id="total-cotas">0</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Custo líquido ajustado:</span>
+                    <span class="detail-value" id="custo-liquido">R$ 0,00</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Fundo(s) incorporado(s):</span>
+                    <span class="detail-value" id="fundos-usados">-</span>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <p><strong>ℹ️ Como o cálculo funciona:</strong></p>
+                <p>O valor reflete as relações oficiais de incorporação, deduzindo o valor recebido em dinheiro e convertendo frações ao preço de referência de R$ 64,15 por cota (valor de fechamento do RVBI11 em 01/10/2025, conforme Fatos Relevantes oficiais).</p>
+                <p style="margin-top: 10px;"><strong>Parâmetros oficiais de incorporação:</strong></p>
+                <p>• HGFF11: Fator 1,0766 | Dinheiro: R$ 1,9829/cota</p>
+                <p>• BPFF11: Fator 0,9321 | Dinheiro: R$ 2,2386/cota</p>
+                <p style="margin-top: 10px; color: #ee5a24; font-weight: bold;">⚠️ Lembre-se: Se você possuía ambos os fundos, o cálculo DEVE ser feito em conjunto para obter o preço médio correto!</p>
+            </div>
+
+            <button class="reset-btn" onclick="resetar()">Fazer Novo Cálculo</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedOption = null;
+        const PRECO_REF_RVBI = 64.15;
+
+        const PARAMETROS = {
+            'HGFF11': {
+                fator: 1.0766,
+                dinheiroPorCota: 1.9829
+            },
+            'BPFF11': {
+                fator: 0.9321,
+                dinheiroPorCota: 2.2386
+            }
+        };
+
+        function selectOption(option) {
+            selectedOption = option;
+            
+            // Atualizar botões
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Esconder todas as seções
+            document.querySelectorAll('.input-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Mostrar seção apropriada
+            if (option === 'HGFF11') {
+                document.getElementById('hgff-section').classList.add('active');
+            } else if (option === 'BPFF11') {
+                document.getElementById('bpff-section').classList.add('active');
+            } else if (option === 'AMBOS') {
+                document.getElementById('ambos-section').classList.add('active');
+            }
+
+            // Mostrar botão de calcular
+            document.getElementById('calculate-btn').style.display = 'block';
+
+            // Esconder resultados anteriores
+            document.getElementById('result-section').classList.remove('active');
+        }
+
+        function calcularPrecoMedio(fundo, qtd, precoMedio) {
+            const params = PARAMETROS[fundo];
+            if (!params) throw new Error("Fundo inválido");
+
+            const custoTotal = qtd * precoMedio;
+            const totalCotasRVBI = qtd * params.fator;
+            const dinheiroRecebido = qtd * params.dinheiroPorCota;
+
+            const cotasInteiras = Math.floor(totalCotasRVBI);
+            const fracao = totalCotasRVBI - cotasInteiras;
+            const dinheiroFracao = fracao * PRECO_REF_RVBI;
+
+            const custoLiquido = custoTotal - dinheiroRecebido - dinheiroFracao;
+
+            return {
+                cotasInteiras,
+                custoLiquido
+            };
+        }
+
+        function calcular() {
+            try {
+                let totalCotas = 0;
+                let totalCusto = 0;
+                let fundosUsados = '';
+
+                if (selectedOption === 'HGFF11') {
+                    const qtd = parseFloat(document.getElementById('hgff-qtd').value);
+                    const preco = parseFloat(document.getElementById('hgff-preco').value);
+
+                    if (isNaN(qtd) || isNaN(preco) || qtd <= 0 || preco <= 0) {
+                        alert('Por favor, preencha todos os campos com valores válidos.');
+                        return;
+                    }
+
+                    const resultado = calcularPrecoMedio('HGFF11', qtd, preco);
+                    totalCotas = resultado.cotasInteiras;
+                    totalCusto = resultado.custoLiquido;
+                    fundosUsados = 'HGFF11';
+
+                } else if (selectedOption === 'BPFF11') {
+                    const qtd = parseFloat(document.getElementById('bpff-qtd').value);
+                    const preco = parseFloat(document.getElementById('bpff-preco').value);
+
+                    if (isNaN(qtd) || isNaN(preco) || qtd <= 0 || preco <= 0) {
+                        alert('Por favor, preencha todos os campos com valores válidos.');
+                        return;
+                    }
+
+                    const resultado = calcularPrecoMedio('BPFF11', qtd, preco);
+                    totalCotas = resultado.cotasInteiras;
+                    totalCusto = resultado.custoLiquido;
+                    fundosUsados = 'BPFF11';
+
+                } else if (selectedOption === 'AMBOS') {
+                    const qtdHGFF = parseFloat(document.getElementById('ambos-hgff-qtd').value);
+                    const precoHGFF = parseFloat(document.getElementById('ambos-hgff-preco').value);
+                    const qtdBPFF = parseFloat(document.getElementById('ambos-bpff-qtd').value);
+                    const precoBPFF = parseFloat(document.getElementById('ambos-bpff-preco').value);
+
+                    if (isNaN(qtdHGFF) || isNaN(precoHGFF) || isNaN(qtdBPFF) || isNaN(precoBPFF) ||
+                        qtdHGFF <= 0 || precoHGFF <= 0 || qtdBPFF <= 0 || precoBPFF <= 0) {
+                        alert('Por favor, preencha todos os campos com valores válidos.');
+                        return;
+                    }
+
+                    const resultadoHGFF = calcularPrecoMedio('HGFF11', qtdHGFF, precoHGFF);
+                    const resultadoBPFF = calcularPrecoMedio('BPFF11', qtdBPFF, precoBPFF);
+
+                    totalCotas = resultadoHGFF.cotasInteiras + resultadoBPFF.cotasInteiras;
+                    totalCusto = resultadoHGFF.custoLiquido + resultadoBPFF.custoLiquido;
+                    fundosUsados = 'HGFF11 e BPFF11';
+                }
+
+                if (totalCotas === 0) {
+                    alert('O cálculo resultou em zero cotas. Verifique os valores inseridos.');
+                    return;
+                }
+
+                const novoPrecoMedio = totalCusto / totalCotas;
+
+                // Exibir resultados
+                document.getElementById('resultado-preco').textContent = `R$ ${novoPrecoMedio.toFixed(2)}`;
+                document.getElementById('total-cotas').textContent = totalCotas.toLocaleString('pt-BR');
+                document.getElementById('custo-liquido').textContent = `R$ ${totalCusto.toFixed(2).toLocaleString('pt-BR')}`;
+                document.getElementById('fundos-usados').textContent = fundosUsados;
+                document.getElementById('result-section').classList.add('active');
+
+                // Scroll suave para o resultado
+                document.getElementById('result-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            } catch (error) {
+                alert('Erro ao calcular: ' + error.message);
+            }
+        }
+
+        function resetar() {
+            // Limpar inputs
+            document.querySelectorAll('input').forEach(input => {
+                input.value = '';
+            });
+
+            // Resetar seleção
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Esconder seções
+            document.querySelectorAll('.input-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            document.getElementById('calculate-btn').style.display = 'none';
+            document.getElementById('result-section').classList.remove('active');
+
+            selectedOption = null;
+
+            // Scroll para o topo
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Adicionar validação em tempo real
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value < 0) {
+                    this.value = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
