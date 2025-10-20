@@ -542,7 +542,7 @@
             document.getElementById('result-section').classList.remove('active');
         }
 
-        function calcularPrecoMedio(fundo, qtd, precoMedio) {
+        function calcularDadosFundo(fundo, qtd, precoMedio) {
             const params = PARAMETROS[fundo];
             if (!params) throw new Error("Fundo inválido");
 
@@ -550,6 +550,14 @@
             const totalCotasRVBI = qtd * params.fator;
             const dinheiroRecebido = qtd * params.dinheiroPorCota;
 
+            return {
+                custoTotal,
+                totalCotasRVBI,
+                dinheiroRecebido
+            };
+        }
+
+        function calcularResultado(custoTotal, totalCotasRVBI, dinheiroRecebido) {
             const cotasInteiras = Math.floor(totalCotasRVBI);
             const fracao = totalCotasRVBI - cotasInteiras;
             const dinheiroFracao = fracao * PRECO_REF_RVBI;
@@ -577,7 +585,8 @@
                         return;
                     }
 
-                    const resultado = calcularPrecoMedio('HGFF11', qtd, preco);
+                    const dados = calcularDadosFundo('HGFF11', qtd, preco);
+                    const resultado = calcularResultado(dados.custoTotal, dados.totalCotasRVBI, dados.dinheiroRecebido);
                     totalCotas = resultado.cotasInteiras;
                     totalCusto = resultado.custoLiquido;
                     fundosUsados = 'HGFF11';
@@ -591,7 +600,8 @@
                         return;
                     }
 
-                    const resultado = calcularPrecoMedio('BPFF11', qtd, preco);
+                    const dados = calcularDadosFundo('BPFF11', qtd, preco);
+                    const resultado = calcularResultado(dados.custoTotal, dados.totalCotasRVBI, dados.dinheiroRecebido);
                     totalCotas = resultado.cotasInteiras;
                     totalCusto = resultado.custoLiquido;
                     fundosUsados = 'BPFF11';
@@ -608,11 +618,17 @@
                         return;
                     }
 
-                    const resultadoHGFF = calcularPrecoMedio('HGFF11', qtdHGFF, precoHGFF);
-                    const resultadoBPFF = calcularPrecoMedio('BPFF11', qtdBPFF, precoBPFF);
+                    const dadosHGFF = calcularDadosFundo('HGFF11', qtdHGFF, precoHGFF);
+                    const dadosBPFF = calcularDadosFundo('BPFF11', qtdBPFF, precoBPFF);
 
-                    totalCotas = resultadoHGFF.cotasInteiras + resultadoBPFF.cotasInteiras;
-                    totalCusto = resultadoHGFF.custoLiquido + resultadoBPFF.custoLiquido;
+                    const custoTotal = dadosHGFF.custoTotal + dadosBPFF.custoTotal;
+                    const totalCotasRVBI = dadosHGFF.totalCotasRVBI + dadosBPFF.totalCotasRVBI;
+                    const dinheiroRecebido = dadosHGFF.dinheiroRecebido + dadosBPFF.dinheiroRecebido;
+
+                    const resultado = calcularResultado(custoTotal, totalCotasRVBI, dinheiroRecebido);
+
+                    totalCotas = resultado.cotasInteiras;
+                    totalCusto = resultado.custoLiquido;
                     fundosUsados = 'HGFF11 e BPFF11';
                 }
 
