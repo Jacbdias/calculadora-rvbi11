@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Preço Médio Ajustado - RVBI11</title>
+    <title>Calculadora de Preço Médio Ajustado - PSEC11</title>
     <style>
         * {
             margin: 0;
@@ -259,7 +259,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>💰 Calculadora RVBI11</h1>
+        <h1>💰 Calculadora PSEC11</h1>
         <p class="subtitle">Preço Médio Ajustado após Incorporação</p>
 
         <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); padding: 15px; border-radius: 10px; margin-bottom: 20px; color: white; text-align: center; font-weight: 600; box-shadow: 0 5px 15px rgba(238, 90, 36, 0.3);">
@@ -325,7 +325,7 @@
             
             <div class="result-details">
                 <div class="detail-row">
-                    <span class="detail-label">Total de cotas RVBI11 recebidas:</span>
+                    <span class="detail-label">Total de cotas PSEC11 recebidas:</span>
                     <span class="detail-value" id="total-cotas">0</span>
                 </div>
                 <div class="detail-row">
@@ -336,7 +336,7 @@
 
             <div class="info-box">
                 <p><strong>ℹ️ Como o cálculo funciona:</strong></p>
-                <p>O valor reflete as relações oficiais de incorporação, deduzindo o valor recebido em dinheiro e convertendo frações ao preço de referência de R$ 64,15 por cota (valor de fechamento do RVBI11 em 01/10/2025, conforme Fatos Relevantes oficiais).</p>
+                <p>O valor reflete as relações oficiais de incorporação, deduzindo o valor recebido em dinheiro e convertendo frações ao preço de referência de R$ 64,15 por cota (valor de fechamento do PSEC11 em 01/10/2025, conforme Fatos Relevantes oficiais).</p>
                 <p style="margin-top: 10px;"><strong>Parâmetros oficiais de incorporação:</strong></p>
                 <p>• HGFF11: Fator 1,0766 | Dinheiro: R$ 1,9829/cota</p>
                 <p>• BPFF11: Fator 0,9321 | Dinheiro: R$ 2,2386/cota</p>
@@ -349,7 +349,7 @@
 
     <script>
         let selectedOption = null;
-        const PRECO_REF_RVBI = 64.15;
+        const PRECO_REF_PSEC = 64.15;
 
         const PARAMETROS = {
             'HGFF11': {
@@ -397,12 +397,12 @@
             if (!params) throw new Error("Fundo inválido");
 
             const custoTotal = qtd * precoMedio;
-            const totalCotasRVBI = qtd * params.fator;
+            const totalCotasPSEC = qtd * params.fator;
             const dinheiroRecebido = qtd * params.dinheiroPorCota;
 
-            const cotasInteiras = Math.floor(totalCotasRVBI);
-            const fracao = totalCotasRVBI - cotasInteiras;
-            const dinheiroFracao = fracao * PRECO_REF_RVBI;
+            const cotasInteiras = Math.floor(totalCotasPSEC);
+            const fracao = totalCotasPSEC - cotasInteiras;
+            const dinheiroFracao = fracao * PRECO_REF_PSEC;
 
             const custoLiquido = custoTotal - dinheiroRecebido - dinheiroFracao;
 
